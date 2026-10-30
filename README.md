@@ -1,4 +1,4 @@
-# PokeBonkModifier (Bản tiếng Việt)
+# PokeBonk
 
 Công cụ chỉnh sửa (trainer) cho game [PokéBonk](https://pokebonk.com/): thay đổi vàng, kinh nghiệm, chỉ số nhân vật, kẻ địch, tỉ lệ Shiny, tốc độ game… ngay trong trận.
 
