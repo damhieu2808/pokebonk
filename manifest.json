@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "PokéBonk 修改器",
+  "name": "PokéBonk Modifier (Tiếng Việt)",
   "version": "1.5.0",
-  "description": "PokéBonk 局内全参数自定义修改器",
+  "description": "Công cụ tùy chỉnh toàn bộ thông số trong trận PokéBonk",
   "author": "Antigravity",
   "permissions": ["activeTab"],
   "content_scripts": [

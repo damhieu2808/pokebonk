@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         PokéBonk 修改器
+// @name         PokéBonk Modifier (Tiếng Việt)
 // @namespace    http://tampermonkey.net/
 // @version      1.5.0
-// @description  PokéBonk 局内全参数自定义修改器
+// @description  Công cụ tùy chỉnh toàn bộ thông số trong trận PokéBonk
 // @author       Antigravity
 // @match        *://*/*
 // @grant        none
@@ -15,10 +15,10 @@
   if (window.__POKEBONK_TRAINER_INJECTED__) return;
   window.__POKEBONK_TRAINER_INJECTED__ = true;
 
-  // ==================== 1. 鼠标锁定 (Pointer Lock) 智能拦截 ====================
+  // ==================== 1. Chặn khóa chuột (Pointer Lock) thông minh ====================
   let isPanelOpen = false;
 
-  // 当面板呼出时，阻止游戏自动抢回鼠标指针
+  // Khi bảng điều khiển đang mở, ngăn game tự chiếm lại con trỏ chuột
   const origRequestPointerLock = Element.prototype.requestPointerLock;
   if (origRequestPointerLock) {
     Element.prototype.requestPointerLock = function (...args) {
@@ -35,7 +35,7 @@
     }
   }
 
-  // ==================== 2. 全自动对局对象捕获机制 ====================
+  // ==================== 2. Cơ chế tự động bắt đối tượng trận đấu (run) ====================
   let capturedRun = null;
 
   function isValidRun(r) {
@@ -55,7 +55,7 @@
     if (!proto || proto.__POKEBONK_HOOKED__) return;
     proto.__POKEBONK_HOOKED__ = true;
 
-    // 劫持 frameGap：游戏核心循环每一帧都会调用
+    // Hook frameGap: vòng lặp chính của game gọi hàm này ở mỗi khung hình
     if (typeof proto.frameGap === 'function') {
       const origFrameGap = proto.frameGap;
       proto.frameGap = function () {
@@ -67,7 +67,7 @@
       };
     }
 
-    // 劫持 startRun
+    // Hook startRun (bắt đầu trận)
     if (typeof proto.startRun === 'function') {
       const origStartRun = proto.startRun;
       proto.startRun = function (...args) {
@@ -80,7 +80,7 @@
       };
     }
 
-    // 劫持 toMenu
+    // Hook toMenu (quay về menu)
     if (typeof proto.toMenu === 'function') {
       const origToMenu = proto.toMenu;
       proto.toMenu = function (...args) {
@@ -131,7 +131,7 @@
     return null;
   }
 
-  // ==================== 3. 极简黑白 UI 界面 ====================
+  // ==================== 3. Giao diện UI đen trắng tối giản ====================
   function initUI() {
     if (document.getElementById('pokebonk-trainer-host')) return;
 
@@ -161,12 +161,12 @@
         position: fixed;
       }
 
-      /* 极简黑白面板 */
+      /* Bảng điều khiển đen trắng tối giản */
       .trainer-panel {
         position: fixed;
         top: 50px;
         right: 40px;
-        width: 480px;
+        width: 520px;
         max-height: 88vh;
         background: var(--bg-panel);
         border: 1px solid var(--border-main);
@@ -181,7 +181,7 @@
         display: none !important;
       }
 
-      /* 标题栏 */
+      /* Thanh tiêu đề */
       .panel-header {
         padding: 10px 14px;
         background: #1c1c1c;
@@ -279,11 +279,12 @@
         background: #262626;
       }
 
-      /* 选项卡导航 */
+      /* Thanh điều hướng tab */
       .nav-tabs {
         display: flex;
         background: #191919;
         border-bottom: 1px solid var(--border-main);
+        flex-wrap: wrap;
         padding: 4px 6px;
         gap: 4px;
       }
@@ -310,7 +311,7 @@
         font-weight: 700;
       }
 
-      /* 面板主体内容 */
+      /* Nội dung chính của bảng */
       .panel-body {
         padding: 12px 14px;
         overflow-y: auto;
@@ -336,7 +337,7 @@
         display: flex;
       }
 
-      /* 分组区块 */
+      /* Khối nhóm */
       .card {
         background: var(--bg-card);
         border: 1px solid var(--border-main);
@@ -356,7 +357,7 @@
         padding-bottom: 4px;
       }
 
-      /* 网格按钮 */
+      /* Lưới nút bấm */
       .btn-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -365,8 +366,11 @@
       .btn-grid-3 {
         grid-template-columns: repeat(3, 1fr);
       }
+      .btn-grid .btn {
+        white-space: normal;
+      }
 
-      /* 按钮样式 */
+      /* Kiểu nút */
       .btn {
         background: var(--btn-bg);
         border: 1px solid var(--btn-border);
@@ -404,7 +408,7 @@
         color: #000000;
       }
 
-      /* 表单行 */
+      /* Hàng điều khiển */
       .ctrl-row {
         display: flex;
         align-items: center;
@@ -445,7 +449,7 @@
         gap: 5px;
       }
 
-      /* Toast 消息 */
+      /* Thông báo nhanh (Toast) */
       .toast {
         position: absolute;
         bottom: 12px;
@@ -485,314 +489,314 @@
       <div class="trainer-panel hidden" id="panel">
         <div class="panel-header" id="panelHeader">
           <div class="panel-title">
-            <span>PokéBonk 修改器</span>
-            <span class="status-pill status-disconnected" id="connStatus">自动侦测中...</span>
+            <span>PokéBonk Modifier</span>
+            <span class="status-pill status-disconnected" id="connStatus">Đang tự dò tìm...</span>
           </div>
           <div style="display: flex; align-items: center; gap: 6px;">
-            <button class="panel-header-btn" id="btnHeaderReset" title="一键重置所有参数并恢复游戏默认">恢复默认</button>
-            <button class="close-btn" id="closeBtn" title="按 ~ 键关闭">×</button>
+            <button class="panel-header-btn" id="btnHeaderReset" title="Đặt lại toàn bộ thông số và khôi phục mặc định của game">Mặc định</button>
+            <button class="close-btn" id="closeBtn" title="Nhấn phím ~ để đóng">×</button>
           </div>
         </div>
 
         <div class="nav-tabs">
-          <button class="tab-btn active" data-tab="tab-resources">资源与数值</button>
-          <button class="tab-btn" data-tab="tab-survival">生存与战斗</button>
-          <button class="tab-btn" data-tab="tab-stats">角色属性</button>
-          <button class="tab-btn" data-tab="tab-enemies">敌人调控</button>
-          <button class="tab-btn" data-tab="tab-capture">闪光与捕获</button>
-          <button class="tab-btn" data-tab="tab-world">环境与倍速</button>
+          <button class="tab-btn active" data-tab="tab-resources">Tài nguyên</button>
+          <button class="tab-btn" data-tab="tab-survival">Sinh tồn</button>
+          <button class="tab-btn" data-tab="tab-stats">Chỉ số</button>
+          <button class="tab-btn" data-tab="tab-enemies">Kẻ địch</button>
+          <button class="tab-btn" data-tab="tab-capture">Shiny & Bắt</button>
+          <button class="tab-btn" data-tab="tab-world">Tốc độ & Môi trường</button>
         </div>
 
         <div class="panel-body">
-          <!-- 1. 资源与数值 -->
+          <!-- 1. Tài nguyên & Chỉ số -->
           <div class="tab-content active" id="tab-resources">
             <div class="card">
-              <div class="card-title">局内金币</div>
+              <div class="card-title">Vàng trong trận</div>
               <div class="ctrl-row">
-                <span>设定金币数量</span>
+                <span>Số vàng</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpGoldVal" value="100" min="0" step="10">
-                  <button class="btn btn-solid" id="btnSetGold">设为该值</button>
-                  <button class="btn" id="btnAddGold">+追加</button>
+                  <button class="btn btn-solid" id="btnSetGold">Đặt bằng</button>
+                  <button class="btn" id="btnAddGold">+Cộng thêm</button>
                 </div>
               </div>
               <div class="btn-grid-3 btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnQuickGold50">+50 金币</button>
-                <button class="btn" id="btnQuickGold200">+200 金币</button>
-                <button class="btn" id="btnQuickGold1000">+1000 金币</button>
+                <button class="btn" id="btnQuickGold50">+50 vàng</button>
+                <button class="btn" id="btnQuickGold200">+200 vàng</button>
+                <button class="btn" id="btnQuickGold1000">+1000 vàng</button>
               </div>
             </div>
 
             <div class="card">
-              <div class="card-title">钥匙与刷新</div>
+              <div class="card-title">Chìa khóa & Lượt đổi thẻ</div>
               <div class="ctrl-row">
-                <span>钥匙数量 (keys)</span>
+                <span>Số chìa khóa (keys)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpKeysVal" value="5" min="0" step="1">
-                  <button class="btn" id="btnSetKeys">设定钥匙</button>
+                  <button class="btn" id="btnSetKeys">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>选卡刷新次数 (rerolls)</span>
+                <span>Số lượt đổi lại thẻ (rerolls)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpRerollsVal" value="5" min="0" step="1">
-                  <button class="btn" id="btnSetRerolls">设定刷新</button>
+                  <button class="btn" id="btnSetRerolls">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>选卡跳过/放逐 (skips)</span>
+                <span>Số lượt bỏ qua/loại thẻ (skips)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpSkipsVal" value="5" min="0" step="1">
-                  <button class="btn" id="btnSetSkips">设定次数</button>
+                  <button class="btn" id="btnSetSkips">Đặt</button>
                 </div>
               </div>
             </div>
 
             <div class="card">
-              <div class="card-title">等级与经验</div>
+              <div class="card-title">Cấp độ & Kinh nghiệm</div>
               <div class="ctrl-row">
-                <span>增加对局经验</span>
+                <span>Cộng kinh nghiệm (XP)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpAddXpVal" value="500" min="10" step="100">
-                  <button class="btn btn-solid" id="btnApplyAddXp">+增加经验</button>
+                  <button class="btn btn-solid" id="btnApplyAddXp">+Cộng XP</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>经验获取倍率 (xpMult)</span>
+                <span>Hệ số nhận XP (xpMult)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpXpMultVal" value="2.0" min="1" step="0.5">
-                  <button class="btn" id="btnSetXpMult">设定倍率</button>
+                  <button class="btn" id="btnSetXpMult">Đặt</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnGainLevel">直接升 1 级 (选卡)</button>
-                <button class="btn" id="btnXpNext1">下级所需经验设为 1</button>
-                <button class="btn" id="btnMoveSlots">招式栏位开到 4</button>
-                <button class="btn" id="btnVitaminSlots">维生素栏位开到 8</button>
+                <button class="btn" id="btnGainLevel">Lên ngay 1 cấp (chọn thẻ)</button>
+                <button class="btn" id="btnXpNext1">XP cần để lên cấp = 1</button>
+                <button class="btn" id="btnMoveSlots">Mở 4 ô chiêu thức</button>
+                <button class="btn" id="btnVitaminSlots">Mở 8 ô vitamin</button>
               </div>
             </div>
           </div>
 
-          <!-- 2. 生存与战斗 -->
+          <!-- 2. Sinh tồn & Chiến đấu -->
           <div class="tab-content" id="tab-survival">
             <div class="card">
-              <div class="card-title">保命功能</div>
+              <div class="card-title">Bảo toàn mạng sống</div>
               <div class="btn-grid">
-                <button class="btn btn-solid" id="btnGodMode">无敌模式 (GodMode 开关)</button>
-                <button class="btn" id="btnFullHeal">回满生命值</button>
+                <button class="btn btn-solid" id="btnGodMode">Bật/tắt Bất tử (GodMode)</button>
+                <button class="btn" id="btnFullHeal">Hồi đầy máu</button>
               </div>
               <div class="ctrl-row" style="margin-top: 2px;">
-                <span>无敌帧持续时间 (秒)</span>
+                <span>Thời gian miễn sát thương (giây)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpIframesVal" value="10" min="1" step="5">
-                  <button class="btn" id="btnSetIframes">设置</button>
+                  <button class="btn" id="btnSetIframes">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>隐身持续时间 (秒)</span>
+                <span>Thời gian tàng hình (giây)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpInvisVal" value="15" min="1" step="5">
-                  <button class="btn" id="btnSetInvis">设置</button>
+                  <button class="btn" id="btnSetInvis">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>复活次数 (revives)</span>
+                <span>Số lượt hồi sinh (revives)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpRevivesVal" value="3" min="0" step="1">
-                  <button class="btn" id="btnSetRevives">设置</button>
+                  <button class="btn" id="btnSetRevives">Đặt</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnReviveDead">原地复活</button>
-                <button class="btn btn-solid" id="btnUltReady">终极技立即就绪 (Ult)</button>
+                <button class="btn" id="btnReviveDead">Hồi sinh tại chỗ</button>
+                <button class="btn btn-solid" id="btnUltReady">Nạp đầy tuyệt chiêu (Ult)</button>
               </div>
             </div>
           </div>
 
-          <!-- 3. 角色属性 -->
+          <!-- 3. Chỉ số nhân vật -->
           <div class="tab-content" id="tab-stats">
             <div class="card">
-              <div class="card-title">属性调整 (tempMods 机制)</div>
+              <div class="card-title">Điều chỉnh chỉ số (cơ chế tempMods)</div>
               <div class="ctrl-row">
-                <span>总体伤害倍率 (Damage ×N)</span>
+                <span>Hệ số sát thương (Damage ×N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpDmg" value="2.0" step="0.5">
-                  <button class="btn" id="btnApplyDmg">应用</button>
+                  <button class="btn" id="btnApplyDmg">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>攻击范围 (Area ×N)</span>
+                <span>Phạm vi tấn công (Area ×N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpArea" value="1.5" step="0.2">
-                  <button class="btn" id="btnApplyArea">应用</button>
+                  <button class="btn" id="btnApplyArea">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>攻击速度 (Attack Speed ×N)</span>
+                <span>Tốc độ đánh (Attack Speed ×N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpAtkSpd" value="1.5" step="0.2">
-                  <button class="btn" id="btnApplyAtkSpd">应用</button>
+                  <button class="btn" id="btnApplyAtkSpd">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>额外弹射物数量 (+N)</span>
+                <span>Số đạn bắn thêm (+N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpProj" value="2" step="1">
-                  <button class="btn" id="btnApplyProj">应用</button>
+                  <button class="btn" id="btnApplyProj">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>移动速度倍率 (Move Speed ×N)</span>
+                <span>Hệ số tốc độ chạy (Move Speed ×N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpSpeed" value="1.5" step="0.2">
-                  <button class="btn" id="btnApplySpeed">应用</button>
+                  <button class="btn" id="btnApplySpeed">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>拾取范围增加 (+N)</span>
+                <span>Tăng phạm vi nhặt đồ (+N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpPickup" value="30" step="10">
-                  <button class="btn" id="btnApplyPickup">应用</button>
+                  <button class="btn" id="btnApplyPickup">Áp dụng</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>幸运值增加 (Luck +N)</span>
+                <span>Tăng may mắn (Luck +N)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpLuck" value="200" step="50">
-                  <button class="btn" id="btnApplyLuck">应用</button>
+                  <button class="btn" id="btnApplyLuck">Áp dụng</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 4px;">
-                <button class="btn btn-solid" id="btnApplyMildStats">注入温和实用属性 (2x伤/1.5x速/+30拾取)</button>
-                <button class="btn" id="btnClearMods">重置所有属性</button>
+                <button class="btn btn-solid" id="btnApplyMildStats">Gói buff nhẹ (2x sát thương / 1.5x tốc độ / +30 nhặt)</button>
+                <button class="btn" id="btnClearMods">Đặt lại toàn bộ chỉ số</button>
               </div>
             </div>
           </div>
 
-          <!-- 4. 敌人调控 -->
+          <!-- 4. Điều chỉnh kẻ địch -->
           <div class="tab-content" id="tab-enemies">
             <div class="card">
-              <div class="card-title">敌人倍率控制</div>
+              <div class="card-title">Hệ số kẻ địch</div>
               <div class="ctrl-row">
-                <span>敌人血量倍率 (0.5 = 半血)</span>
+                <span>Hệ số máu của địch (0.5 = nửa máu)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpEnemyHp" value="0.5" step="0.1">
-                  <button class="btn" id="btnSetEnemyHp">设定</button>
+                  <button class="btn" id="btnSetEnemyHp">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>敌人伤害倍率 (0 = 无伤, 0.5 = 减半)</span>
+                <span>Hệ số sát thương của địch (0 = không gây sát thương, 0.5 = giảm một nửa)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpEnemyDamage" value="0.5" step="0.1">
-                  <button class="btn" id="btnSetEnemyDamage">设定</button>
+                  <button class="btn" id="btnSetEnemyDamage">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>敌人移动速度 (0.7 = 减速好躲)</span>
+                <span>Tốc độ chạy của địch (0.7 = chậm hơn, dễ né)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpEnemySpeed" value="0.7" step="0.1">
-                  <button class="btn" id="btnSetEnemySpeed">设定</button>
+                  <button class="btn" id="btnSetEnemySpeed">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>同屏敌人上限 (降低可防掉帧卡顿)</span>
+                <span>Số địch tối đa trên màn hình (giảm để tránh giật lag)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpMaxEnemies" value="300" step="50">
-                  <button class="btn" id="btnSetMaxEnemies">设定</button>
+                  <button class="btn" id="btnSetMaxEnemies">Đặt</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnZeroEnemyDmg">免疫敌人伤害 (0伤害)</button>
-                <button class="btn" id="btnFinalSwarm">触发最终狂暴怪潮 (×6怪)</button>
+                <button class="btn" id="btnZeroEnemyDmg">Miễn nhiễm sát thương địch (0)</button>
+                <button class="btn" id="btnFinalSwarm">Kích hoạt đợt quái cuối (×6 quái)</button>
               </div>
             </div>
           </div>
 
-          <!-- 5. 闪光与捕获 -->
+          <!-- 5. Shiny & Bắt Pokémon -->
           <div class="tab-content" id="tab-capture">
             <div class="card">
-              <div class="card-title">捕获特权</div>
+              <div class="card-title">Hỗ trợ bắt Pokémon</div>
               <div class="btn-grid">
-                <button class="btn btn-solid" id="btnSureCapture">投球 100% 必定捕获</button>
-                <button class="btn" id="btnTriggerShiny">下帧触发闪光判定</button>
+                <button class="btn btn-solid" id="btnSureCapture">Ném bóng bắt chắc 100%</button>
+                <button class="btn" id="btnTriggerShiny">Kích hoạt Shiny ở khung hình kế</button>
               </div>
               <div class="ctrl-row" style="margin-top: 2px;">
-                <span>头目捕获延长时长 (秒)</span>
+                <span>Kéo dài thời gian bắt Boss (giây)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpCaptureTimeVal" value="120" min="10" step="30">
-                  <button class="btn" id="btnLockCaptureTime">设置时长</button>
+                  <button class="btn" id="btnLockCaptureTime">Đặt</button>
                 </div>
               </div>
               <div class="ctrl-row">
-                <span>生成指定闪光宝可梦 (图鉴编号)</span>
+                <span>Tạo Pokémon Shiny theo số Pokédex</span>
                 <div class="input-btn-group">
-                  <input type="number" class="ctrl-input" id="inpSpeciesId" value="150" placeholder="150超梦">
-                  <button class="btn btn-solid" id="btnSpawnShiny">生成</button>
+                  <input type="number" class="ctrl-input" id="inpSpeciesId" value="150" placeholder="150 = Mewtwo">
+                  <button class="btn btn-solid" id="btnSpawnShiny">Tạo</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnRollLegendShiny">掷一次传说闪光判定</button>
-                <button class="btn" id="btnShinyBoss">将当前敌人设为闪光</button>
+                <button class="btn" id="btnRollLegendShiny">Tung 1 lần Shiny huyền thoại</button>
+                <button class="btn" id="btnShinyBoss">Biến địch hiện tại thành Shiny</button>
               </div>
             </div>
           </div>
 
-          <!-- 6. 环境与倍速 -->
+          <!-- 6. Môi trường & Tốc độ -->
           <div class="tab-content" id="tab-world">
             <div class="card">
-              <div class="card-title">游戏速度与镜头</div>
+              <div class="card-title">Tốc độ game & Camera</div>
               <div class="ctrl-row">
-                <span>游戏运行速度 (timeScale)</span>
+                <span>Tốc độ chạy game (timeScale)</span>
                 <div class="input-btn-group">
                   <input type="number" class="ctrl-input" id="inpTimeScaleVal" value="1.5" min="0.2" max="5.0" step="0.1">
-                  <button class="btn btn-solid" id="btnSetTimeScale">应用速度</button>
+                  <button class="btn btn-solid" id="btnSetTimeScale">Áp dụng</button>
                 </div>
               </div>
-              <div style="color: #ff6666; font-size: 11px; margin: 4px 0 6px 0;">切换游戏速度会100%封号，请谨慎使用</div>
+              <div style="color: #ff6666; font-size: 11px; margin: 4px 0 6px 0;">⚠ Cảnh báo: đổi tốc độ game chắc chắn bị khóa tài khoản (100%), hãy cân nhắc kỹ!</div>
               <div class="btn-grid-3 btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnSpeed05">0.5x 慢放</button>
-                <button class="btn" id="btnSpeed1">1.0x 正常</button>
-                <button class="btn" id="btnSpeed2">2.0x 双倍速</button>
+                <button class="btn" id="btnSpeed05">0.5x Chậm</button>
+                <button class="btn" id="btnSpeed1">1.0x Bình thường</button>
+                <button class="btn" id="btnSpeed2">2.0x Nhanh gấp đôi</button>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnCamOverhead">全景俯角视角</button>
-                <button class="btn" id="btnNoTrauma">关闭屏幕震动与晃屏</button>
+                <button class="btn" id="btnCamOverhead">Góc nhìn từ trên cao</button>
+                <button class="btn" id="btnNoTrauma">Tắt rung/lắc màn hình</button>
               </div>
             </div>
             <div class="card">
-              <div class="card-title">天气与关卡</div>
+              <div class="card-title">Thời tiết & Màn chơi</div>
               <div class="ctrl-row">
-                <span>即时切换天气</span>
+                <span>Đổi thời tiết ngay</span>
                 <div class="input-btn-group">
                   <select class="ctrl-select" id="selWeather">
-                    <option value="clear">晴朗 (clear)</option>
-                    <option value="sun">大晴天 (sun)</option>
-                    <option value="rain">雨天 (rain)</option>
-                    <option value="snow">雪天 (snow)</option>
-                    <option value="sand">沙暴 (sand)</option>
-                    <option value="fog">浓雾 (fog)</option>
-                    <option value="storm">暴风雨 (storm)</option>
-                    <option value="wind">大风 (wind)</option>
+                    <option value="clear">Quang đãng (clear)</option>
+                    <option value="sun">Nắng gắt (sun)</option>
+                    <option value="rain">Mưa (rain)</option>
+                    <option value="snow">Tuyết (snow)</option>
+                    <option value="sand">Bão cát (sand)</option>
+                    <option value="fog">Sương mù (fog)</option>
+                    <option value="storm">Giông bão (storm)</option>
+                    <option value="wind">Gió lớn (wind)</option>
                   </select>
-                  <button class="btn" id="btnSetWeather">应用</button>
+                  <button class="btn" id="btnSetWeather">Áp dụng</button>
                 </div>
               </div>
               <div class="btn-grid" style="margin-top: 2px;">
-                <button class="btn" id="btnJumpStage4">直跳第 4 阶段</button>
-                <button class="btn btn-solid" id="btnInstantClear">标记直接通关</button>
+                <button class="btn" id="btnJumpStage4">Nhảy tới giai đoạn 4</button>
+                <button class="btn btn-solid" id="btnInstantClear">Đánh dấu qua màn</button>
               </div>
             </div>
           </div>
         </div>
         
         <div class="panel-bottom-bar">
-          <button class="btn btn-reset-full" id="btnResetAll" title="重置对局内修改的所有状态，恢复游戏纯净默认">一键重置全部功能</button>
+          <button class="btn btn-reset-full" id="btnResetAll" title="Đặt lại mọi thay đổi trong trận, đưa game về trạng thái gốc">Đặt lại toàn bộ chức năng</button>
         </div>
 
-        <div class="toast" id="toast">已生效</div>
+        <div class="toast" id="toast">Đã áp dụng</div>
 
         <div class="footer-note">
-          按键盘 <b>~</b> 键呼出/隐藏面板并释放鼠标 | Esc 也可关闭
+          Nhấn phím <b>~</b> để mở/ẩn bảng và nhả chuột | Esc để đóng
         </div>
       </div>
     `;
@@ -817,16 +821,16 @@
     function executeWithRun(callback, desc) {
       const run = getRun();
       if (!run) {
-        showToast('等待进入对局 (系统正在自动检测)...');
+        showToast('Chưa vào trận (đang tự dò tìm)...');
         return;
       }
       try {
         callback(run);
-        showToast(`${desc || '操作已生效'}`);
+        showToast(`${desc || 'Đã áp dụng'}`);
         updateStatus();
       } catch (err) {
-        console.error('[PokéBonk Trainer] 执行出错:', err);
-        showToast(`出错: ${err.message}`);
+        console.error('[PokéBonk Trainer] Lỗi khi thực thi:', err);
+        showToast(`Lỗi: ${err.message}`);
       }
     }
 
@@ -837,15 +841,15 @@
         const hp = Math.round(run.player?.hp || 0);
         const gold = run.gold || 0;
         connStatus.className = 'status-pill status-connected';
-        connStatus.textContent = `对局中 (Lv.${lvl} | HP:${hp} | 金币:${gold})`;
+        connStatus.textContent = `Trong trận (Lv.${lvl} | HP:${hp} | Vàng:${gold})`;
       } else {
         connStatus.className = 'status-pill status-disconnected';
-        connStatus.textContent = `等待进入对局`;
+        connStatus.textContent = `Chờ vào trận`;
       }
     }
     setInterval(updateStatus, 800);
 
-    // 面板开关控制（同时管理鼠标释放）
+    // Điều khiển mở/đóng bảng (đồng thời quản lý việc nhả chuột)
     function openPanel() {
       isPanelOpen = true;
       panel.classList.remove('hidden');
@@ -868,13 +872,13 @@
 
     closeBtn.addEventListener('click', closePanel);
 
-    // 鼠标移入面板时再次确保鼠标指针处于释放状态
+    // Khi rê chuột vào bảng, đảm bảo con trỏ chuột luôn được nhả
     panel.addEventListener('mouseenter', unlockMouse);
     panel.addEventListener('mousedown', unlockMouse);
 
-    // 全局按键控制
+    // Phím tắt toàn cục
     window.addEventListener('keydown', (e) => {
-      // 文本框输入中不触发
+      // Không kích hoạt khi đang gõ trong ô nhập
       if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
 
       if (e.key === '`' || e.key === '~' || e.key === 'Insert') {
@@ -896,7 +900,7 @@
       });
     });
 
-    // 拖拽面板
+    // Kéo thả bảng
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
@@ -918,51 +922,51 @@
       isDragging = false;
     });
 
-    // --- 局内资源 ---
+    // --- Tài nguyên trong trận ---
     shadow.getElementById('btnSetGold').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpGoldVal').value) || 0;
       executeWithRun((run) => {
         run.gold = Math.max(0, val);
-      }, `金币已设为 ${val}`);
+      }, `Đã đặt vàng = ${val}`);
     });
 
     shadow.getElementById('btnAddGold').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpGoldVal').value) || 0;
       executeWithRun((run) => {
         run.gold = (run.gold || 0) + val;
-      }, `已增加 ${val} 金币`);
+      }, `Đã cộng ${val} vàng`);
     });
 
     shadow.getElementById('btnQuickGold50').addEventListener('click', () => {
       executeWithRun((run) => {
         run.gold = (run.gold || 0) + 50;
-      }, '已增加 50 金币');
+      }, 'Đã cộng 50 vàng');
     });
 
     shadow.getElementById('btnQuickGold200').addEventListener('click', () => {
       executeWithRun((run) => {
         run.gold = (run.gold || 0) + 200;
-      }, '已增加 200 金币');
+      }, 'Đã cộng 200 vàng');
     });
 
     shadow.getElementById('btnQuickGold1000').addEventListener('click', () => {
       executeWithRun((run) => {
         run.gold = (run.gold || 0) + 1000;
-      }, '已增加 1000 金币');
+      }, 'Đã cộng 1000 vàng');
     });
 
     shadow.getElementById('btnSetKeys').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpKeysVal').value) || 0;
       executeWithRun((run) => {
         run.keys = Math.max(0, val);
-      }, `钥匙已设为 ${val}`);
+      }, `Đã đặt chìa khóa = ${val}`);
     });
 
     shadow.getElementById('btnSetRerolls').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpRerollsVal').value) || 0;
       executeWithRun((run) => {
         run.rerolls = Math.max(0, val);
-      }, `刷新次数已设为 ${val}`);
+      }, `Đã đặt lượt đổi thẻ = ${val}`);
     });
 
     shadow.getElementById('btnSetSkips').addEventListener('click', () => {
@@ -970,14 +974,14 @@
       executeWithRun((run) => {
         run.skips = Math.max(0, val);
         run.banishes = Math.max(0, val);
-      }, `跳过/放逐已设为 ${val}`);
+      }, `Đã đặt lượt bỏ qua/loại = ${val}`);
     });
 
     shadow.getElementById('btnApplyAddXp').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpAddXpVal').value) || 100;
       executeWithRun((run) => {
         run.player?.addXp?.(val);
-      }, `已增加 ${val} 经验`);
+      }, `Đã cộng ${val} XP`);
     });
 
     shadow.getElementById('btnSetXpMult').addEventListener('click', () => {
@@ -987,38 +991,38 @@
           run.diff.xpMult = val;
           run.diff.xp = val;
         }
-      }, `经验倍率已设为 ${val}x`);
+      }, `Đã đặt hệ số XP = ${val}x`);
     });
 
     shadow.getElementById('btnGainLevel').addEventListener('click', () => {
       executeWithRun((run) => {
         run.player?.gainLevel?.();
-      }, '已提升 1 级');
+      }, 'Đã lên 1 cấp');
     });
 
     shadow.getElementById('btnXpNext1').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.player) run.player.xpNext = 1;
-      }, '下级所需经验已设为 1');
+      }, 'Đã đặt XP cần để lên cấp = 1');
     });
 
     shadow.getElementById('btnMoveSlots').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.player) run.player.moveSlots = 4;
-      }, '招式栏位开到 4');
+      }, 'Mở 4 ô chiêu thức');
     });
 
     shadow.getElementById('btnVitaminSlots').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.player) run.player.vitaminSlots = 8;
-      }, '维生素栏位开到 8');
+      }, 'Mở 8 ô vitamin');
     });
 
-    // --- 生存与战斗 ---
+    // --- Sinh tồn & Chiến đấu ---
     shadow.getElementById('btnGodMode').addEventListener('click', () => {
       executeWithRun((run) => {
         run.godMode = !run.godMode;
-      }, '无敌模式切换');
+      }, 'Đã bật/tắt Bất tử');
     });
 
     shadow.getElementById('btnFullHeal').addEventListener('click', () => {
@@ -1026,28 +1030,28 @@
         const max = run.player?.maxHp || 100;
         run.player?.heal?.(max);
         if (run.player) run.player.hp = max;
-      }, '已恢复至满血');
+      }, 'Đã hồi đầy máu');
     });
 
     shadow.getElementById('btnSetIframes').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpIframesVal').value) || 5;
       executeWithRun((run) => {
         if (run.player) run.player.iframes = val;
-      }, `无敌帧已设为 ${val} 秒`);
+      }, `Đã đặt miễn sát thương ${val} giây`);
     });
 
     shadow.getElementById('btnSetInvis').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpInvisVal').value) || 10;
       executeWithRun((run) => {
         if (run.player) run.player.invisT = val;
-      }, `隐身已设为 ${val} 秒`);
+      }, `Đã đặt tàng hình ${val} giây`);
     });
 
     shadow.getElementById('btnSetRevives').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpRevivesVal').value) || 1;
       executeWithRun((run) => {
         if (run.player) run.player.revives = val;
-      }, `复活次数已设为 ${val}`);
+      }, `Đã đặt lượt hồi sinh = ${val}`);
     });
 
     shadow.getElementById('btnReviveDead').addEventListener('click', () => {
@@ -1056,7 +1060,7 @@
           run.player.dead = false;
           run.player.heal?.(run.player.maxHp || 100);
         }
-      }, '角色已原地复活');
+      }, 'Nhân vật đã hồi sinh tại chỗ');
     });
 
     shadow.getElementById('btnUltReady').addEventListener('click', () => {
@@ -1065,10 +1069,10 @@
           run.ult.charge = 1;
           run.ult.add?.(1);
         }
-      }, '终极技已就绪');
+      }, 'Tuyệt chiêu đã sẵn sàng');
     });
 
-    // --- 角色属性 ---
+    // --- Chỉ số nhân vật ---
     function applySingleStat(stat, mul, add, name) {
       executeWithRun((run) => {
         run.tempMods = run.tempMods || [];
@@ -1077,42 +1081,42 @@
         if (typeof add === 'number') mod.add = add;
         run.tempMods.push(mod);
         run.player?.recompute?.();
-      }, `${name} 属性已强化`);
+      }, `Đã tăng ${name}`);
     }
 
     shadow.getElementById('btnApplyDmg').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpDmg').value) || 1.5;
-      applySingleStat('damage', val, null, `伤害 ×${val}`);
+      applySingleStat('damage', val, null, `sát thương ×${val}`);
     });
 
     shadow.getElementById('btnApplyArea').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpArea').value) || 1.5;
-      applySingleStat('area', val, null, `范围 ×${val}`);
+      applySingleStat('area', val, null, `phạm vi ×${val}`);
     });
 
     shadow.getElementById('btnApplyAtkSpd').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpAtkSpd').value) || 1.5;
-      applySingleStat('attackSpeed', val, null, `攻速 ×${val}`);
+      applySingleStat('attackSpeed', val, null, `tốc độ đánh ×${val}`);
     });
 
     shadow.getElementById('btnApplyProj').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpProj').value) || 1;
-      applySingleStat('projectiles', null, val, `弹射数 +${val}`);
+      applySingleStat('projectiles', null, val, `số đạn +${val}`);
     });
 
     shadow.getElementById('btnApplySpeed').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpSpeed').value) || 1.5;
-      applySingleStat('moveSpeed', val, null, `移速 ×${val}`);
+      applySingleStat('moveSpeed', val, null, `tốc độ chạy ×${val}`);
     });
 
     shadow.getElementById('btnApplyPickup').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpPickup').value) || 30;
-      applySingleStat('pickupRange', null, val, `拾取范围 +${val}`);
+      applySingleStat('pickupRange', null, val, `phạm vi nhặt +${val}`);
     });
 
     shadow.getElementById('btnApplyLuck').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpLuck').value) || 200;
-      applySingleStat('luck', null, val, `幸运值 +${val}`);
+      applySingleStat('luck', null, val, `may mắn +${val}`);
     });
 
     shadow.getElementById('btnApplyMildStats').addEventListener('click', () => {
@@ -1126,62 +1130,62 @@
           { stat: 'luck', add: 200 }
         );
         run.player?.recompute?.();
-      }, '温和属性已注入');
+      }, 'Đã áp dụng gói buff nhẹ');
     });
 
     shadow.getElementById('btnClearMods').addEventListener('click', () => {
       executeWithRun((run) => {
         run.tempMods = [];
         run.player?.recompute?.();
-      }, '所有临时属性已重置');
+      }, 'Đã đặt lại toàn bộ chỉ số tạm thời');
     });
 
-    // --- 敌人调控 ---
+    // --- Điều chỉnh kẻ địch ---
     shadow.getElementById('btnSetEnemyHp').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpEnemyHp').value) || 0.5;
       executeWithRun((run) => {
         if (run.diff) run.diff.enemyHp = val;
-      }, `敌人血量倍率已设为 ${val}`);
+      }, `Đã đặt hệ số máu địch = ${val}`);
     });
 
     shadow.getElementById('btnSetEnemyDamage').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpEnemyDamage').value) || 0.5;
       executeWithRun((run) => {
         if (run.diff) run.diff.enemyDamage = val;
-      }, `敌人伤害倍率已设为 ${val}`);
+      }, `Đã đặt hệ số sát thương địch = ${val}`);
     });
 
     shadow.getElementById('btnZeroEnemyDmg').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.diff) run.diff.enemyDamage = 0;
-      }, '已免疫敌人伤害');
+      }, 'Đã miễn nhiễm sát thương địch');
     });
 
     shadow.getElementById('btnSetEnemySpeed').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpEnemySpeed').value) || 0.7;
       executeWithRun((run) => {
         if (run.diff) run.diff.enemySpeed = val;
-      }, `敌人移速倍率已设为 ${val}`);
+      }, `Đã đặt hệ số tốc độ địch = ${val}`);
     });
 
     shadow.getElementById('btnSetMaxEnemies').addEventListener('click', () => {
       const val = parseInt(shadow.getElementById('inpMaxEnemies').value) || 300;
       executeWithRun((run) => {
         run.maxEnemies = val;
-      }, `同屏上限已设为 ${val}`);
+      }, `Đã đặt số địch tối đa = ${val}`);
     });
 
     shadow.getElementById('btnFinalSwarm').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.director) run.director.finalSwarm = true;
-      }, '狂暴怪潮已触发 (×6怪)');
+      }, 'Đã kích hoạt đợt quái cuối (×6 quái)');
     });
 
-    // --- 闪光与捕获 ---
+    // --- Shiny & Bắt Pokémon ---
     shadow.getElementById('btnSureCapture').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.capture) run.capture.sure = true;
-      }, '100% 必定捕获已锁定');
+      }, 'Đã bật bắt chắc 100%');
     });
 
     shadow.getElementById('btnLockCaptureTime').addEventListener('click', () => {
@@ -1192,25 +1196,25 @@
           run.capture.weakT = val;
           run.capture.escapeT = val;
         }
-      }, `头目捕获时间已设为 ${val} 秒`);
+      }, `Đã đặt thời gian bắt Boss ${val} giây`);
     });
 
     shadow.getElementById('btnTriggerShiny').addEventListener('click', () => {
       executeWithRun((run) => {
         if (run.capture) run.capture.shinyAt = 0;
-      }, '下帧闪光判定已就绪');
+      }, 'Shiny sẽ kích hoạt ở khung hình kế');
     });
 
     shadow.getElementById('btnRollLegendShiny').addEventListener('click', () => {
       executeWithRun((run) => {
         run.capture?.rollLegendShiny?.();
-      }, '已掷出一次传说闪光判定');
+      }, 'Đã tung 1 lần Shiny huyền thoại');
     });
 
     shadow.getElementById('btnShinyBoss').addEventListener('click', () => {
       executeWithRun((run) => {
         run.capture?.shinyBoss?.(0);
-      }, '已将目标设为闪光');
+      }, 'Đã biến mục tiêu thành Shiny');
     });
 
     shadow.getElementById('btnSpawnShiny').addEventListener('click', () => {
@@ -1221,73 +1225,73 @@
         } else if (run.forceLegendary) {
           run.forceLegendary = id;
         }
-      }, `强制生成闪光 [ID: ${id}]`);
+      }, `Đã tạo Shiny [ID: ${id}]`);
     });
 
-    // --- 环境与倍速 ---
+    // --- Môi trường & Tốc độ ---
     shadow.getElementById('btnSetTimeScale').addEventListener('click', () => {
       const val = parseFloat(shadow.getElementById('inpTimeScaleVal').value) || 1.0;
       executeWithRun((run) => {
         run.timeScale = val;
-      }, `游戏速度已设为 ${val}x`);
+      }, `Đã đặt tốc độ game ${val}x`);
     });
 
     shadow.getElementById('btnSpeed05').addEventListener('click', () => {
       executeWithRun((run) => {
         run.timeScale = 0.5;
-      }, '速度已设为 0.5x 慢放');
+      }, 'Đã đặt tốc độ 0.5x (chậm)');
     });
 
     shadow.getElementById('btnSpeed1').addEventListener('click', () => {
       executeWithRun((run) => {
         run.timeScale = 1.0;
-      }, '速度已恢复 1.0x 正常');
+      }, 'Đã về tốc độ 1.0x (bình thường)');
     });
 
     shadow.getElementById('btnSpeed2').addEventListener('click', () => {
       executeWithRun((run) => {
         run.timeScale = 2.0;
-      }, '速度已加速至 2.0x');
+      }, 'Đã tăng tốc lên 2.0x');
     });
 
     shadow.getElementById('btnCamOverhead').addEventListener('click', () => {
       executeWithRun((run) => {
         run.camDist = 18;
         run.camPitch = 0.9;
-      }, '已切换为广角俯角');
+      }, 'Đã chuyển sang góc nhìn từ trên cao');
     });
 
     shadow.getElementById('btnNoTrauma').addEventListener('click', () => {
       executeWithRun((run) => {
         run.trauma = 0;
         run.hitstopT = 0;
-      }, '屏幕晃动已关闭');
+      }, 'Đã tắt rung màn hình');
     });
 
     shadow.getElementById('btnSetWeather').addEventListener('click', () => {
       const weather = shadow.getElementById('selWeather').value;
       executeWithRun((run) => {
         run.weather = weather;
-      }, `天气已变更为: ${weather}`);
+      }, `Đã đổi thời tiết: ${weather}`);
     });
 
     shadow.getElementById('btnJumpStage4').addEventListener('click', () => {
       executeWithRun((run) => {
         run.stage = 4;
         run.stageTime = 0;
-      }, '已跳转至第 4 阶段');
+      }, 'Đã nhảy tới giai đoạn 4');
     });
 
     shadow.getElementById('btnInstantClear').addEventListener('click', () => {
       executeWithRun((run) => {
         run.regionCleared = true;
-      }, '已标记为通关');
+      }, 'Đã đánh dấu qua màn');
     });
 
-    // --- 一键恢复所有功能至默认 ---
+    // --- Khôi phục toàn bộ chức năng về mặc định ---
     function resetAllToDefault() {
       executeWithRun((run) => {
-        // 1. 生存与战斗重置
+        // 1. Đặt lại sinh tồn & chiến đấu
         run.godMode = false;
         if (run.player) {
           run.player.iframes = 0;
@@ -1295,7 +1299,7 @@
           run.player.dead = false;
         }
 
-        // 2. 敌人与难度倍率重置 (恢复官方基准 1.0)
+        // 2. Đặt lại hệ số kẻ địch & độ khó (về mức chuẩn 1.0)
         if (run.diff) {
           run.diff.enemyHp = 1.0;
           run.diff.enemyDamage = 1.0;
@@ -1313,11 +1317,11 @@
           run.director.finalSwarm = false;
         }
 
-        // 3. 玩家额外增益/减益属性 (tempMods) 完全清空并触发重算
+        // 3. Xóa sạch buff/debuff thêm của người chơi (tempMods) và tính lại chỉ số
         run.tempMods = [];
         run.player?.recompute?.();
 
-        // 4. 捕获与闪光重置
+        // 4. Đặt lại bắt Pokémon & Shiny
         if (run.capture) {
           run.capture.sure = false;
           delete run.capture.weakT;
@@ -1326,7 +1330,7 @@
         run.shinySkin = false;
         delete run.forceLegendary;
 
-        // 5. 视角、震动与游戏速度重置
+        // 5. Đặt lại camera, rung màn hình & tốc độ game
         run.timeScale = 1.0;
         run.camDist = 9;
         run.camPitch = 0.45;
@@ -1335,7 +1339,7 @@
         run.hitstopT = 0;
         run.weather = 'clear';
 
-        // 6. 重置所有界面的输入框数值至标准默认值
+        // 6. Đưa mọi ô nhập trên giao diện về giá trị mặc định
         const inputDefaults = {
           inpGoldVal: '100',
           inpKeysVal: '5',
@@ -1368,7 +1372,7 @@
         }
         const selW = shadow.getElementById('selWeather');
         if (selW) selW.value = 'clear';
-      }, '已一键恢复所有功能至默认状态');
+      }, 'Đã khôi phục toàn bộ chức năng về mặc định');
     }
 
     const btnResetAll = shadow.getElementById('btnResetAll');

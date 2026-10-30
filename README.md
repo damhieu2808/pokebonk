@@ -1,6 +1,54 @@
-# PokeBonkModifier
-本项目采用 **[CC BY-NC 4.0 (知识共享 署名-非商业性使用 4.0 国际许可协议)]**[![CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
-- **严禁商用**：任何个人或组织**不得以任何形式收取费用**（包括但不限于闲鱼/淘宝等平台付费倒卖、换皮销售、付费加群提供等）
-- **完全免费**：本项目为个人独立开发且**全网永久免费分享**，若您是通过付费购买获得此工具，说明您已遭遇欺诈，请立即向平台**申请退款并举报商家**！
--  PokéBonk 修改器，用于https://pokebonk.com/  |  B站视频https://www.bilibili.com/video/BV1bQnL6LEcw/
--  本项目唯一官方QQ群：1050911128
+# PokeBonkModifier (Bản tiếng Việt)
+
+Công cụ chỉnh sửa (trainer) cho game [PokéBonk](https://pokebonk.com/): thay đổi vàng, kinh nghiệm, chỉ số nhân vật, kẻ địch, tỉ lệ Shiny, tốc độ game… ngay trong trận.
+
+- Video giới thiệu (Bilibili): https://www.bilibili.com/video/BV1bQnL6LEcw/
+- Nhóm QQ chính thức duy nhất của dự án gốc: 1050911128
+
+## Giấy phép
+
+Dự án dùng giấy phép **[CC BY-NC 4.0 (Ghi công – Phi thương mại 4.0 Quốc tế)](https://creativecommons.org/licenses/by-nc/4.0/)** [![CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+
+- **Nghiêm cấm thương mại**: không cá nhân hay tổ chức nào được **thu phí dưới bất kỳ hình thức nào** (bao gồm bán lại trên các sàn, đổi giao diện để bán, thu phí vào nhóm…).
+- **Hoàn toàn miễn phí**: đây là dự án cá nhân, **chia sẻ miễn phí vĩnh viễn**. Nếu bạn phải trả tiền để có công cụ này thì bạn đã bị lừa — hãy **yêu cầu hoàn tiền và tố cáo người bán** ngay!
+
+## Cài đặt
+
+Chọn **một** trong hai cách:
+
+### Cách 1: Tiện ích trình duyệt (Chrome / Edge / Cốc Cốc…)
+
+1. Tải dự án về máy (nút **Code → Download ZIP** rồi giải nén, hoặc `git clone`).
+2. Mở trang quản lý tiện ích: `chrome://extensions` (Edge: `edge://extensions`).
+3. Bật **Chế độ dành cho nhà phát triển** (Developer mode) ở góc trên.
+4. Bấm **Tải tiện ích đã giải nén** (Load unpacked) và chọn thư mục chứa file `manifest.json`.
+5. Mở lại (F5) trang game.
+
+### Cách 2: Tampermonkey
+
+1. Cài tiện ích [Tampermonkey](https://www.tampermonkey.net/).
+2. Tạo script mới, xóa nội dung mặc định, dán toàn bộ nội dung file `content.js` vào rồi lưu.
+3. Mở lại (F5) trang game.
+
+## Cách sử dụng
+
+1. Vào game và **bắt đầu một trận**. Công cụ tự dò tìm trận đấu, không cần thao tác gì thêm.
+2. Nhấn phím **`~`** (phím dấu huyền, cạnh số 1) hoặc **Insert** để mở/ẩn bảng điều khiển. Khi bảng mở, chuột được nhả ra để bạn bấm nút.
+3. Nhấn **Esc** hoặc nút **×** để đóng bảng. Kéo thanh tiêu đề để di chuyển bảng.
+4. Ô trạng thái trên tiêu đề cho biết đã kết nối chưa: `Trong trận (Lv | HP | Vàng)` nghĩa là đã sẵn sàng, `Chờ vào trận` nghĩa là chưa vào trận.
+5. Nhập giá trị vào ô rồi bấm **Đặt** / **Áp dụng**. Một thông báo nhỏ ở dưới bảng sẽ xác nhận thao tác.
+
+## Các chức năng
+
+| Tab | Chức năng |
+| --- | --- |
+| **Tài nguyên** | Đặt/cộng vàng, chìa khóa, lượt đổi thẻ (reroll), lượt bỏ qua/loại thẻ; cộng XP, hệ số XP, lên cấp ngay, mở 4 ô chiêu thức, mở 8 ô vitamin |
+| **Sinh tồn** | Bật/tắt bất tử, hồi đầy máu, thời gian miễn sát thương, tàng hình, số lượt hồi sinh, hồi sinh tại chỗ, nạp đầy tuyệt chiêu |
+| **Chỉ số** | Tăng sát thương, phạm vi, tốc độ đánh, số đạn, tốc độ chạy, phạm vi nhặt, may mắn; gói buff nhẹ; đặt lại chỉ số |
+| **Kẻ địch** | Hệ số máu / sát thương / tốc độ của địch, giới hạn số địch trên màn hình, miễn nhiễm sát thương, kích hoạt đợt quái cuối |
+| **Shiny & Bắt** | Bắt chắc 100%, kéo dài thời gian bắt Boss, kích hoạt Shiny, tạo Pokémon Shiny theo số Pokédex (vd: 150 = Mewtwo) |
+| **Tốc độ & Môi trường** | Tốc độ game, góc nhìn từ trên cao, tắt rung màn hình, đổi thời tiết, nhảy tới giai đoạn 4, đánh dấu qua màn |
+
+Nút **Mặc định** (trên tiêu đề) hoặc **Đặt lại toàn bộ chức năng** (cuối bảng) đưa mọi thay đổi trong trận về trạng thái gốc.
+
+> ⚠ **Cảnh báo:** theo tác giả gốc, **đổi tốc độ game chắc chắn bị khóa tài khoản**. Hãy dùng các chức năng một cách có trách nhiệm và tự chịu rủi ro.
