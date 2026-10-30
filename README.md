@@ -2,16 +2,6 @@
 
 Công cụ chỉnh sửa (trainer) cho game [PokéBonk](https://pokebonk.com/): thay đổi vàng, kinh nghiệm, chỉ số nhân vật, kẻ địch, tỉ lệ Shiny, tốc độ game… ngay trong trận.
 
-- Video giới thiệu (Bilibili): https://www.bilibili.com/video/BV1bQnL6LEcw/
-- Nhóm QQ chính thức duy nhất của dự án gốc: 1050911128
-
-## Giấy phép
-
-Dự án dùng giấy phép **[CC BY-NC 4.0 (Ghi công – Phi thương mại 4.0 Quốc tế)](https://creativecommons.org/licenses/by-nc/4.0/)** [![CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
-
-- **Nghiêm cấm thương mại**: không cá nhân hay tổ chức nào được **thu phí dưới bất kỳ hình thức nào** (bao gồm bán lại trên các sàn, đổi giao diện để bán, thu phí vào nhóm…).
-- **Hoàn toàn miễn phí**: đây là dự án cá nhân, **chia sẻ miễn phí vĩnh viễn**. Nếu bạn phải trả tiền để có công cụ này thì bạn đã bị lừa — hãy **yêu cầu hoàn tiền và tố cáo người bán** ngay!
-
 ## Cài đặt
 
 Chọn **một** trong hai cách:
